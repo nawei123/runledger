@@ -52,8 +52,8 @@ pub fn account(parsed : Parsed) -> Report {
       })
     }
     // Keep aggregate integers exact in JSON and avoid overflowing Int64.
-    let incoming = call.input_tokens.or(0L)
-    let outgoing = call.output_tokens.or(0L)
+    let incoming = call.input_tokens.unwrap_or(0L)
+    let outgoing = call.output_tokens.unwrap_or(0L)
     if input > 9007199254740991L - incoming ||
       output > 9007199254740991L - outgoing {
       findings.push({

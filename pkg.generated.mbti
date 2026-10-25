@@ -6,7 +6,13 @@ pub fn account(Parsed) -> Report
 
 pub fn audit(String) -> Report
 
+pub fn audit_with_manifest(String, String) -> Report
+
+pub fn check_coverage(Parsed, Manifest) -> Array[Finding]
+
 pub fn decode_call(Json) -> Call raise DecodeError
+
+pub fn decode_manifest(Json) -> Manifest raise DecodeError
 
 pub fn parse_jsonl(String) -> Parsed
 
@@ -36,6 +42,14 @@ pub(all) struct Finding {
   message : String
 } derive(ToJson)
 pub fn Finding::to_json(Self) -> Json
+
+pub(all) struct Manifest {
+  run_id : String
+  model : String
+  task_ids : Array[String]
+  required_stages : Array[String]
+} derive(ToJson)
+pub fn Manifest::to_json(Self) -> Json
 
 pub(all) struct Parsed {
   records : Array[Record]
