@@ -45,6 +45,8 @@ moon run cmd/runledger -- audit /tmp/runledger-calls.jsonl examples/manifest.jso
 
 核心接口为 `audit(text)`、`audit_with_manifest(text, manifest_text)`、`import_ollama(text)` 和 `audit_records(parsed, manifest_text?)`。调用方可接入自有日志收集器；底层结构与完整接口见 `pkg.generated.mbti`。
 
+[验收演示与发布检查](docs/acceptance.md) 提供可复现报告生成命令及独立注册表消费者验证。
+
 运行全部本地检查：
 
 ```sh

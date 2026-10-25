@@ -21,3 +21,7 @@ jobs:
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
       - name: Check, build, test and verify generated interface
         run: bash scripts/verify.sh
+      - name: Test portable core
+        run: moon test --target wasm-gc --deny-warn
+      - name: Generate reproducible acceptance reports
+        run: python3 scripts/acceptance.py
