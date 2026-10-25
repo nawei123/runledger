@@ -91,8 +91,15 @@ pub fn check_coverage(parsed : Parsed, manifest : Manifest) -> Array[Finding] {
 ///|
 /// Audit using an explicit run, model and task-stage coverage contract.
 pub fn audit_with_manifest(text : String, manifest_text : String) -> Report {
-  let parsed = reconcile(parse_jsonl(text))
+  audit_records(parse_jsonl(text), Some(manifest_text))
+}
+
+///|
+/// Preserve adapter diagnostics and original line numbers through reconciliation.
+pub fn audit_records(raw : Parsed, manifest_text : String?) -> Report {
+  let parsed = reconcile(raw)
   let report = account(parsed)
+  guard manifest_text is Some(manifest_text) else { return report }
   let findings = report.findings.copy()
   let manifest = decode_manifest(
     @json.parse(manifest_text, reject_duplicate_keys=true),

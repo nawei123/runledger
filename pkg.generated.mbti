@@ -6,6 +6,8 @@ pub fn account(Parsed) -> Report
 
 pub fn audit(String) -> Report
 
+pub fn audit_records(Parsed, String?) -> Report
+
 pub fn audit_with_manifest(String, String) -> Report
 
 pub fn check_coverage(Parsed, Manifest) -> Array[Finding]

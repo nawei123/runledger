@@ -1,0 +1,9 @@
+import {
+  "nawei123/moontrace" @audit,
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/x/fs",
+  "moonbitlang/x/sys",
+}
+
+pkgtype(kind: "executable")
