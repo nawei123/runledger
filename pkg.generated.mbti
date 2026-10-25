@@ -2,6 +2,10 @@
 package "nawei123/moontrace"
 
 // Values
+pub fn account(Parsed) -> Report
+
+pub fn audit(String) -> Report
+
 pub fn decode_call(Json) -> Call raise DecodeError
 
 pub fn parse_jsonl(String) -> Parsed
@@ -44,6 +48,23 @@ pub(all) struct Record {
   call : Call
 } derive(ToJson)
 pub fn Record::to_json(Self) -> Json
+
+pub(all) struct Report {
+  ok : Bool
+  usage_complete : Bool
+  totals : Totals
+  findings : Array[Finding]
+} derive(ToJson)
+pub fn Report::to_json(Self) -> Json
+
+pub(all) struct Totals {
+  calls : Int32
+  input_tokens : Int64
+  output_tokens : Int64
+  unknown_usage_calls : Int32
+  failed_calls : Int32
+} derive(ToJson)
+pub fn Totals::to_json(Self) -> Json
 
 // Type aliases
 
