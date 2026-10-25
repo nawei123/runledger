@@ -6,6 +6,8 @@ pub fn decode_call(Json) -> Call raise DecodeError
 
 pub fn parse_jsonl(String) -> Parsed
 
+pub fn reconcile(Parsed) -> Parsed
+
 // Errors
 pub(all) suberror DecodeError {
   DecodeError(String)

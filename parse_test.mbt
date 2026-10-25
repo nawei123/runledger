@@ -1,6 +1,6 @@
 ///|
 test "parse a valid record and preserve physical line number" {
-  let parsed = parse_jsonl(
+  let parsed = @moontrace.parse_jsonl(
     "\n{\"run_id\":\"r\",\"task_id\":\"1\",\"stage\":\"answer\",\"call_id\":\"c\",\"model\":\"m\",\"status\":\"ok\",\"input_tokens\":10,\"output_tokens\":0}\r\n",
   )
   assert_eq(parsed.findings.length(), 0)
@@ -11,7 +11,9 @@ test "parse a valid record and preserve physical line number" {
 
 ///|
 test "bad syntax and schema are reported rather than silently skipped" {
-  let parsed = parse_jsonl("{\n{}\n{\"run_id\":\"r\",\"run_id\":\"x\"}\n")
+  let parsed = @moontrace.parse_jsonl(
+    "{\n{}\n{\"run_id\":\"r\",\"run_id\":\"x\"}\n",
+  )
   assert_eq(parsed.findings.length(), 3)
   assert_eq(parsed.findings[0].code, "invalid_json")
   assert_eq(parsed.findings[1].code, "invalid_record")
@@ -24,6 +26,6 @@ test "reject negative fractional string and oversized counters" {
     let text = "{\"run_id\":\"r\",\"task_id\":\"1\",\"stage\":\"a\",\"call_id\":\"c\",\"model\":\"m\",\"status\":\"ok\",\"input_tokens\":" +
       value +
       "}"
-    assert_eq(parse_jsonl(text).findings.length(), 1)
+    assert_eq(@moontrace.parse_jsonl(text).findings.length(), 1)
   }
 }
