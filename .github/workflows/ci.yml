@@ -25,3 +25,9 @@ jobs:
         run: moon test --target wasm-gc --deny-warn
       - name: Generate reproducible acceptance reports
         run: python3 scripts/acceptance.py
+      - name: Verify OpenTelemetry SDK interoperability
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/runledger-otel"
+          "$RUNNER_TEMP/runledger-otel/bin/python" -m pip install -r requirements-interop.txt
+          "$RUNNER_TEMP/runledger-otel/bin/python" scripts/interop_otel.py

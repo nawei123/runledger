@@ -51,6 +51,14 @@ pub fn decode_manifest(value : Json) -> Manifest raise DecodeError {
 pub fn check_coverage(parsed : Parsed, manifest : Manifest) -> Array[Finding] {
   let findings : Array[Finding] = []
   let covered : Map[(String, String), Bool] = Map([])
+  let tasks : Map[String, Bool] = Map([])
+  let stages : Map[String, Bool] = Map([])
+  for task in manifest.task_ids {
+    tasks.set(task, true)
+  }
+  for stage in manifest.required_stages {
+    stages.set(stage, true)
+  }
   for record in parsed.records {
     let call = record.call
     let mut valid = true
@@ -58,8 +66,8 @@ pub fn check_coverage(parsed : Parsed, manifest : Manifest) -> Array[Finding] {
       (matches, code) in [
         (call.run_id == manifest.run_id, "unexpected_run"),
         (call.model == manifest.model, "unexpected_model"),
-        (manifest.task_ids.contains(call.task_id), "unexpected_task"),
-        (manifest.required_stages.contains(call.stage), "unexpected_stage"),
+        (tasks.contains(call.task_id), "unexpected_task"),
+        (stages.contains(call.stage), "unexpected_stage"),
       ] {
       if !matches {
         findings.push({
@@ -97,7 +105,12 @@ pub fn audit_with_manifest(text : String, manifest_text : String) -> Report {
 ///|
 /// Preserve adapter diagnostics and original line numbers through reconciliation.
 pub fn audit_records(raw : Parsed, manifest_text : String?) -> Report {
-  let parsed = reconcile(raw)
+  audit_reconciled(reconcile(raw), manifest_text)
+}
+
+///|
+/// Shared path for callers that already reconciled identities.
+fn audit_reconciled(parsed : Parsed, manifest_text : String?) -> Report {
   let report = account(parsed)
   guard manifest_text is Some(manifest_text) else { return report }
   let findings = report.findings.copy()

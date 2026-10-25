@@ -6,6 +6,8 @@ pub fn account(Parsed) -> Report
 
 pub fn audit(String) -> Report
 
+pub fn audit_detail(String, String?) -> DetailedReport
+
 pub fn audit_records(Parsed, String?) -> Report
 
 pub fn audit_with_manifest(String, String) -> Report
@@ -18,9 +20,15 @@ pub fn decode_manifest(Json) -> Manifest raise DecodeError
 
 pub fn decode_ollama(Json) -> Call raise DecodeError
 
+pub fn decode_span(Json) -> Call raise DecodeError
+
+pub fn detail_records(Parsed, String?) -> DetailedReport
+
 pub fn encode_call(Call) -> Json
 
 pub fn import_ollama(String) -> Parsed
+
+pub fn import_spans(String) -> Parsed
 
 pub fn parse_jsonl(String) -> Parsed
 
@@ -32,6 +40,14 @@ pub(all) suberror DecodeError {
 }
 
 // Types and methods
+pub(all) struct AuditStats {
+  parsed_calls : Int32
+  accepted_calls : Int32
+  duplicate_rows : Int32
+  conflicting_rows : Int32
+} derive(ToJson)
+pub fn AuditStats::to_json(Self) -> Json
+
 pub(all) struct Call {
   run_id : String
   task_id : String
@@ -44,6 +60,15 @@ pub(all) struct Call {
 }
 pub fn Call::to_json(Self) -> Json
 pub impl ToJson for Call
+
+pub(all) struct DetailedReport {
+  schema_version : Int32
+  report : Report
+  stats : AuditStats
+  groups : Array[UsageGroup]
+  diagnostic_counts : Map[String, Int32]
+} derive(ToJson)
+pub fn DetailedReport::to_json(Self) -> Json
 
 pub(all) struct Finding {
   line : Int32
@@ -88,6 +113,17 @@ pub(all) struct Totals {
   failed_calls : Int32
 } derive(ToJson)
 pub fn Totals::to_json(Self) -> Json
+
+pub(all) struct UsageGroup {
+  run_id : String
+  stage : String
+  model : String
+  totals : Totals
+  usage_complete : Bool
+  missing_input_calls : Int32
+  missing_output_calls : Int32
+} derive(ToJson)
+pub fn UsageGroup::to_json(Self) -> Json
 
 // Type aliases
 

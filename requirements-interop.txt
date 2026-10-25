@@ -1,0 +1,2 @@
+# Optional SDK interoperability check; not a dependency of the MoonBit library.
+opentelemetry-sdk==1.41.1

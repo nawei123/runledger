@@ -3,7 +3,10 @@ fn usage() -> Unit {
   println("RunLedger: offline agent log integrity and token accounting")
   println("Usage: runledger audit FILE.jsonl [MANIFEST.json]")
   println("       runledger audit-ollama ENVELOPES.jsonl [MANIFEST.json]")
+  println("       runledger audit-spans SDK_SPANS.jsonl [MANIFEST.json]")
+  println("       runledger audit-detail FILE.jsonl [MANIFEST.json]")
   println("       runledger normalize-ollama ENVELOPES.jsonl")
+  println("       runledger normalize-spans SDK_SPANS.jsonl")
   println("Exit: 0 clean, 1 findings, 2 invalid command or I/O failure")
 }
 
@@ -20,17 +23,25 @@ fn execute(args : Array[String]) -> Int32 raise {
   let command = args[1]
   if command != "audit" &&
     command != "audit-ollama" &&
-    command != "normalize-ollama" {
+    command != "audit-spans" &&
+    command != "audit-detail" &&
+    command != "normalize-ollama" &&
+    command != "normalize-spans" {
     usage()
     return 2
   }
-  if command == "normalize-ollama" && args.length() != 3 {
+  if (command == "normalize-ollama" || command == "normalize-spans") &&
+    args.length() != 3 {
     usage()
     return 2
   }
   let text = @fs.read_file_to_string(args[2])
-  if command == "normalize-ollama" {
-    let parsed = @audit.import_ollama(text)
+  if command == "normalize-ollama" || command == "normalize-spans" {
+    let parsed = if command == "normalize-ollama" {
+      @audit.import_ollama(text)
+    } else {
+      @audit.import_spans(text)
+    }
     if !parsed.findings.is_empty() || parsed.records.is_empty() {
       println(@json.to_json(@audit.account(parsed)).stringify())
       return 1
@@ -45,10 +56,15 @@ fn execute(args : Array[String]) -> Int32 raise {
   } else {
     None
   }
-  let parsed = if command == "audit" {
-    @audit.parse_jsonl(text)
-  } else {
-    @audit.import_ollama(text)
+  let parsed = match command {
+    "audit-ollama" => @audit.import_ollama(text)
+    "audit-spans" => @audit.import_spans(text)
+    _ => @audit.parse_jsonl(text)
+  }
+  if command == "audit-detail" {
+    let detail = @audit.detail_records(parsed, manifest)
+    println(@json.to_json(detail).stringify())
+    return if detail.report.ok { 0 } else { 1 }
   }
   let report = @audit.audit_records(parsed, manifest)
   println(@json.to_json(report).stringify())

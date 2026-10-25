@@ -1,0 +1,11 @@
+{
+  "sdk": "opentelemetry-sdk",
+  "sdk_version": "1.41.1",
+  "real_sdk_execution": true,
+  "real_model_execution": false,
+  "synthetic_model_usage": true,
+  "captured_spans": 4,
+  "input_tokens": 406,
+  "output_tokens": 86,
+  "passed": true
+}
