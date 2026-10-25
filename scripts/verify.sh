@@ -3,6 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 moon_bin="${MOON:-moon}"
 "$moon_bin" version --all
+"$moon_bin" update
 "$moon_bin" fmt --check
 "$moon_bin" check --deny-warn
 "$moon_bin" test --deny-warn
