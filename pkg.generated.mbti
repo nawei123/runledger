@@ -14,6 +14,12 @@ pub fn decode_call(Json) -> Call raise DecodeError
 
 pub fn decode_manifest(Json) -> Manifest raise DecodeError
 
+pub fn decode_ollama(Json) -> Call raise DecodeError
+
+pub fn encode_call(Call) -> Json
+
+pub fn import_ollama(String) -> Parsed
+
 pub fn parse_jsonl(String) -> Parsed
 
 pub fn reconcile(Parsed) -> Parsed
