@@ -6,7 +6,7 @@ import tempfile
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-EXE = ROOT / "_build/native/debug/build/cmd/moontrace/moontrace.exe"
+EXE = ROOT / "_build/native/debug/build/cmd/runledger/runledger.exe"
 
 
 class CliTest(unittest.TestCase):

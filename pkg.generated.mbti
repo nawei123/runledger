@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "nawei123/moontrace"
+package "nawei123/runledger"
 
 // Values
 pub fn account(Parsed) -> Report

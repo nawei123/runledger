@@ -17,7 +17,7 @@ test "manifest detects wholly missing tasks" {
   let text = coverage_row("r", "m", "1", "answer", "ok") +
     "\n" +
     coverage_row("r", "m", "1", "review", "ok")
-  let report = @moontrace.audit_with_manifest(text, expectation)
+  let report = @runledger.audit_with_manifest(text, expectation)
   assert_false(report.ok)
   assert_true(report.usage_complete)
   assert_eq(report.findings.length(), 2)
@@ -32,7 +32,7 @@ test "wrong run model and failed attempts cannot satisfy coverage" {
       coverage_row("r", "wrong", "1", "answer", "ok"),
       coverage_row("r", "m", "1", "answer", "error"),
     ] {
-    let report = @moontrace.audit_with_manifest(text, expectation)
+    let report = @runledger.audit_with_manifest(text, expectation)
     assert_false(report.ok)
     assert_true(report.findings.length() >= 4)
   }
@@ -46,14 +46,14 @@ test "complete two-task workflow passes" {
       rows.push(coverage_row("r", "m", task, stage, "ok"))
     }
   }
-  let report = @moontrace.audit_with_manifest(rows.join("\n"), expectation)
+  let report = @runledger.audit_with_manifest(rows.join("\n"), expectation)
   assert_true(report.ok)
   assert_eq(report.totals.calls, 4)
 }
 
 ///|
 test "duplicate task definitions are rejected" {
-  let report = @moontrace.audit_with_manifest(
+  let report = @runledger.audit_with_manifest(
     "", "{\"run_id\":\"r\",\"model\":\"m\",\"task_ids\":[\"1\",\"1\"],\"required_stages\":[\"answer\"]}",
   )
   assert_eq(

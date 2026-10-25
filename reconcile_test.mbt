@@ -5,8 +5,8 @@ fn row(run : String, call : String, tokens : Int32) -> String {
 
 ///|
 test "identical duplicates cannot double count usage" {
-  let result = @moontrace.reconcile(
-    @moontrace.parse_jsonl(row("r", "c", 10) + "\n" + row("r", "c", 10)),
+  let result = @runledger.reconcile(
+    @runledger.parse_jsonl(row("r", "c", 10) + "\n" + row("r", "c", 10)),
   )
   assert_eq(result.records.length(), 1)
   assert_eq(result.findings[0].code, "duplicate_call")
@@ -15,8 +15,8 @@ test "identical duplicates cannot double count usage" {
 
 ///|
 test "conflicting counters exclude all copies" {
-  let result = @moontrace.reconcile(
-    @moontrace.parse_jsonl(
+  let result = @runledger.reconcile(
+    @runledger.parse_jsonl(
       row("r", "c", 10) + "\n" + row("r", "c", 20) + "\n" + row("r", "c", 10),
     ),
   )
@@ -26,8 +26,8 @@ test "conflicting counters exclude all copies" {
 
 ///|
 test "call IDs can be reused across separate runs" {
-  let result = @moontrace.reconcile(
-    @moontrace.parse_jsonl(row("r", "c", 10) + "\n" + row("s", "c", 20)),
+  let result = @runledger.reconcile(
+    @runledger.parse_jsonl(row("r", "c", 10) + "\n" + row("s", "c", 20)),
   )
   assert_eq(result.records.length(), 2)
   assert_eq(result.findings.length(), 0)

@@ -1,9 +1,9 @@
 ///|
 fn usage() -> Unit {
-  println("MoonTrace: offline agent log integrity and token accounting")
-  println("Usage: moontrace audit FILE.jsonl [MANIFEST.json]")
-  println("       moontrace audit-ollama ENVELOPES.jsonl [MANIFEST.json]")
-  println("       moontrace normalize-ollama ENVELOPES.jsonl")
+  println("RunLedger: offline agent log integrity and token accounting")
+  println("Usage: runledger audit FILE.jsonl [MANIFEST.json]")
+  println("       runledger audit-ollama ENVELOPES.jsonl [MANIFEST.json]")
+  println("       runledger normalize-ollama ENVELOPES.jsonl")
   println("Exit: 0 clean, 1 findings, 2 invalid command or I/O failure")
 }
 
