@@ -34,7 +34,7 @@ moon publish --dry-run
 发布成功后，使用独立临时工程从注册表安装并验证公共接口：
 
 ```sh
-python3 scripts/verify_published.py --version 0.1.0
+python3 scripts/verify_published.py --version 0.1.1
 ```
 
 该脚本不使用本地路径依赖，在native和wasm-gc分别验证已发布包。若注册表尚未更新或尚未发布，会报错，不应将其计为成功。

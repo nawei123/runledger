@@ -2,7 +2,15 @@
 
 MoonBit 编写的 Agent 日志离线对账库与 CLI。把一次实验中的请求记录、Token 用量和预期任务清单放在一起检查，避免重复日志被重复统计、漏掉整道任务或把缺失用量算成零。
 
-项目源码公开于 [nawei123/runledger](https://github.com/nawei123/runledger)，尚未发布到 mooncakes.io。以下命令在源码目录运行，不要求 GPU、模型服务或 API Key。
+项目源码公开于 [nawei123/runledger](https://github.com/nawei123/runledger)，包已发布到 [mooncakes.io](https://mooncakes.io/docs/nawei123/runledger)。以下命令在源码目录运行，不要求 GPU、模型服务或 API Key。
+
+在其他 MoonBit 项目中安装库：
+
+```sh
+moon add nawei123/runledger
+```
+
+在使用该库的包的 `moon.pkg` 中添加 `"nawei123/runledger" @ledger` 导入。仅测试使用的依赖应放入 `import { ... } for "test"`，避免开启 `--deny-warn` 时出现未使用导入警告。
 
 ## 快速运行
 

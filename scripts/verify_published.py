@@ -9,7 +9,7 @@ import tempfile
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--moon", default="moon")
-    parser.add_argument("--version", default="0.1.0")
+    parser.add_argument("--version", default="0.1.1")
     args = parser.parse_args()
     module = "nawei123/runledger"
     # Explicit tool paths must survive the change of working directory.
@@ -20,7 +20,7 @@ def main():
             'name = "runledger-check/consumer"\nversion = "0.0.1"\n'
             'preferred_target = "native"\nimport {\n  '
             + json.dumps(module + "@" + args.version) + ',\n}\n', encoding="utf-8")
-        (root / "moon.pkg").write_text('import { "nawei123/runledger" @ledger, }\n', encoding="utf-8")
+        (root / "moon.pkg").write_text('import { "nawei123/runledger" @ledger, } for "test"\n', encoding="utf-8")
         (root / "consumer_test.mbt").write_text('''test "public API detects missing review" {
   let text = "{\\"run_id\\":\\"r\\",\\"task_id\\":\\"q\\",\\"stage\\":\\"answer\\",\\"call_id\\":\\"c\\",\\"model\\":\\"m\\",\\"status\\":\\"ok\\",\\"input_tokens\\":10,\\"output_tokens\\":2}"
   let manifest = "{\\"run_id\\":\\"r\\",\\"model\\":\\"m\\",\\"task_ids\\":[\\"q\\"],\\"required_stages\\":[\\"answer\\",\\"review\\"]}"
