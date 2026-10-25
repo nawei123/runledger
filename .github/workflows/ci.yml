@@ -1,0 +1,23 @@
+name: verify
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, macos-14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tested MoonBit toolchain
+        shell: bash
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh -o /tmp/install-moonbit.sh
+          SHELL=/bin/sh bash /tmp/install-moonbit.sh '0.10.17+d971670cd'
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Check, build, test and verify generated interface
+        run: bash scripts/verify.sh
