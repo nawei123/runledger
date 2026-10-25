@@ -2,13 +2,15 @@
 
 MoonBit 编写的 Agent 日志离线对账库与 CLI。把一次实验中的请求记录、Token 用量和预期任务清单放在一起检查，避免重复日志被重复统计、漏掉整道任务或把缺失用量算成零。
 
-本项目仍是本地开发版本，尚未发布到 GitHub 或 mooncakes.io。以下命令在源码目录运行，不要求 GPU、模型服务或 API Key。
+项目源码公开于 [nawei123/runledger](https://github.com/nawei123/runledger)，尚未发布到 mooncakes.io。以下命令在源码目录运行，不要求 GPU、模型服务或 API Key。
 
 ## 快速运行
 
-安装 [MoonBit CLI](https://www.moonbitlang.com/download)，进入项目目录：
+安装 [MoonBit CLI](https://www.moonbitlang.com/download)，获取源码并进入项目目录：
 
 ```sh
+git clone https://github.com/nawei123/runledger.git
+cd runledger
 moon run cmd/runledger -- audit examples/clean.jsonl examples/manifest.json
 moon run cmd/runledger -- audit examples/broken.jsonl examples/manifest.json
 moon run cmd/runledger -- audit-ollama examples/ollama.jsonl examples/manifest.json
@@ -54,7 +56,7 @@ CLI 退出码：`0` 检查通过；`1` 有诊断；`2` 参数错误或输入文�
 
 ## 兼容性与边界
 
-本地已验证 macOS arm64、moonc `v0.10.17+d971670cd` 的原生构建、21 项单元测试、6 项 CLI 集成测试；相同 21 项单元测试也在 wasm-gc 通过。GitHub Actions 配置覆盖 Linux 和 macOS，尚未在公开仓库运行。
+本地已验证 macOS arm64、moonc `v0.10.17+d971670cd` 的原生构建、21 项单元测试、6 项 CLI 集成测试；相同 21 项单元测试也在 wasm-gc 通过。GitHub Actions 配置覆盖 Linux 和 macOS，实际运行结果见 [CI 工作流](https://github.com/nawei123/runledger/actions/workflows/ci.yml)。
 
 当前逐文件读入内存，适合中小型日志；未验证大规模吞吐。仅支持自定义规范化 JSONL 和指定 Ollama 封装格式，未声称兼容所有 Agent 框架。未接入真实模型运行日志，尚需补充脱敏真实样本的集成验证。
 

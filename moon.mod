@@ -4,6 +4,8 @@ version = "0.1.0"
 
 readme = "README.md"
 
+repository = "https://github.com/nawei123/runledger"
+
 license = "Apache-2.0"
 
 keywords = [ "agent", "audit", "jsonl", "tokens" ]
