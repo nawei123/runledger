@@ -22,7 +22,11 @@ test "bad syntax and schema are reported rather than silently skipped" {
 
 ///|
 test "reject negative fractional string and oversized counters" {
-  for value in ["-1", "1.25", "\"3\"", "9007199254740992", "true"] {
+  for
+    value in [
+      "-1", "1.25", "\"3\"", "9007199254740992", "true", "9007199254740990.5", "1.00000000000000001",
+      "1e1", "-0",
+    ] {
     let text = "{\"run_id\":\"r\",\"task_id\":\"1\",\"stage\":\"a\",\"call_id\":\"c\",\"model\":\"m\",\"status\":\"ok\",\"input_tokens\":" +
       value +
       "}"

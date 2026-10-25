@@ -23,7 +23,22 @@ fn optional_tokens(
 ) -> Int64? raise DecodeError {
   match obj.get(key) {
     None | Some(Null) => None
-    Some(Number(value, ..)) if value >= 0.0 && value <= 9007199254740991.0 => {
+    Some(Number(_, repr=Some(raw))) => {
+      for char in raw {
+        if char < '0' || char > '9' {
+          raise DecodeError("expected unsigned decimal integer: " + key)
+        }
+      }
+      let integer = @string.parse_int64(raw) catch {
+        _ => raise DecodeError("token count out of range: " + key)
+      }
+      if integer > 9007199254740991L {
+        raise DecodeError("token count out of range: " + key)
+      }
+      Some(integer)
+    }
+    Some(Number(value, repr=None)) if value >= 0.0 &&
+      value <= 9007199254740991.0 => {
       let integer = value.to_int64()
       if integer.to_double() != value {
         raise DecodeError("expected integer token count: " + key)
@@ -63,7 +78,11 @@ pub fn parse_jsonl(text : String) -> Parsed {
     if line.trim().is_empty() {
       continue
     }
-    let value = @json.parse(line, reject_duplicate_keys=true) catch {
+    let value = @json.parse(
+      line,
+      reject_duplicate_keys=true,
+      preserve_number_repr=true,
+    ) catch {
       _ => {
         findings.push({
           line: index + 1,
