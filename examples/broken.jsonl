@@ -1,0 +1,3 @@
+{"run_id": "demo-001", "model": "demo-model", "task_id": "q1", "stage": "answer", "call_id": "q1-answer", "status": "ok", "input_tokens": 100, "output_tokens": 20}
+{"run_id": "demo-001", "model": "demo-model", "task_id": "q1", "stage": "answer", "call_id": "q1-answer", "status": "ok", "input_tokens": 100, "output_tokens": 20}
+{"run_id": "demo-001", "model": "unexpected-model", "task_id": "q1", "stage": "review", "call_id": "q1-review", "status": "ok", "input_tokens": 101, "output_tokens": null}
