@@ -2,8 +2,14 @@
 package "nawei123/moontrace"
 
 // Values
+pub fn decode_call(Json) -> Call raise DecodeError
+
+pub fn parse_jsonl(String) -> Parsed
 
 // Errors
+pub(all) suberror DecodeError {
+  DecodeError(String)
+}
 
 // Types and methods
 pub(all) struct Call {
@@ -15,23 +21,27 @@ pub(all) struct Call {
   status : String
   input_tokens : Int64?
   output_tokens : Int64?
-} derive(Eq, Show, ToJson)
+} derive(ToJson)
+pub fn Call::to_json(Self) -> Json
 
 pub(all) struct Finding {
   line : Int32
   code : String
   message : String
-} derive(Eq, Show, ToJson)
+} derive(ToJson)
+pub fn Finding::to_json(Self) -> Json
 
 pub(all) struct Parsed {
   records : Array[Record]
   findings : Array[Finding]
-} derive(Show, ToJson)
+} derive(ToJson)
+pub fn Parsed::to_json(Self) -> Json
 
 pub(all) struct Record {
   line : Int32
   call : Call
-} derive(Eq, Show, ToJson)
+} derive(ToJson)
+pub fn Record::to_json(Self) -> Json
 
 // Type aliases
 

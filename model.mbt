@@ -1,4 +1,5 @@
-///| One provider request attempt. Retries must use distinct call IDs.
+///|
+/// One provider request attempt. Retries must use distinct call IDs.
 pub(all) struct Call {
   run_id : String
   task_id : String
@@ -10,26 +11,36 @@ pub(all) struct Call {
   output_tokens : Int64?
 } derive(ToJson)
 
-///| Diagnostics never copy prompts or response text into the report.
+///|
+/// Diagnostics never copy prompts or response text into the report.
 pub(all) struct Finding {
-  line : Int
+  line : Int32
   code : String
   message : String
 } derive(ToJson)
 
-///| An accepted record and its physical, one-based source line.
+///|
+/// An accepted record and its physical, one-based source line.
 pub(all) struct Record {
-  line : Int
+  line : Int32
   call : Call
 } derive(ToJson)
 
-///| All malformed lines are retained as diagnostics instead of being skipped.
+///|
+/// All malformed lines are retained as diagnostics instead of being skipped.
 pub(all) struct Parsed {
   records : Array[Record]
   findings : Array[Finding]
 } derive(ToJson)
 
+///|
 pub extend Call with ToJson::{to_json}
+
+///|
 pub extend Finding with ToJson::{to_json}
+
+///|
 pub extend Record with ToJson::{to_json}
+
+///|
 pub extend Parsed with ToJson::{to_json}
