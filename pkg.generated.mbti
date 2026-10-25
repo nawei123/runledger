@@ -1,0 +1,38 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "nawei123/moontrace"
+
+// Values
+
+// Errors
+
+// Types and methods
+pub(all) struct Call {
+  run_id : String
+  task_id : String
+  stage : String
+  call_id : String
+  model : String
+  status : String
+  input_tokens : Int64?
+  output_tokens : Int64?
+} derive(Eq, Show, ToJson)
+
+pub(all) struct Finding {
+  line : Int32
+  code : String
+  message : String
+} derive(Eq, Show, ToJson)
+
+pub(all) struct Parsed {
+  records : Array[Record]
+  findings : Array[Finding]
+} derive(Show, ToJson)
+
+pub(all) struct Record {
+  line : Int32
+  call : Call
+} derive(Eq, Show, ToJson)
+
+// Type aliases
+
+// Traits
