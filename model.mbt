@@ -9,7 +9,13 @@ pub(all) struct Call {
   status : String
   input_tokens : Int64?
   output_tokens : Int64?
-} derive(ToJson)
+}
+
+///|
+/// Canonical calls use numeric counters for parser/encoder round trips.
+pub impl ToJson for Call with fn to_json(self) {
+  encode_call(self)
+}
 
 ///|
 /// Diagnostics never copy prompts or response text into the report.

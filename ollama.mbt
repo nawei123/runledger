@@ -74,7 +74,7 @@ pub fn import_ollama(text : String) -> Parsed {
 
 ///|
 /// Encode interoperable integer counters as JSON numbers, not Int64 strings.
-/// Use this encoder for normalized interchange, rather than derived ToJson.
+/// Call implements ToJson using this same canonical encoder.
 pub fn encode_call(call : Call) -> Json {
   let obj : Map[String, Json] = Map([
     ("run_id", Json::string(call.run_id)),
@@ -85,11 +85,13 @@ pub fn encode_call(call : Call) -> Json {
     ("status", Json::string(call.status)),
   ])
   match call.input_tokens {
-    Some(n) => obj.set("input_tokens", Json::number(n.to_double()))
+    Some(n) =>
+      obj.set("input_tokens", Json::number(n.to_double(), repr=n.to_string()))
     None => obj.set("input_tokens", Json::null())
   }
   match call.output_tokens {
-    Some(n) => obj.set("output_tokens", Json::number(n.to_double()))
+    Some(n) =>
+      obj.set("output_tokens", Json::number(n.to_double(), repr=n.to_string()))
     None => obj.set("output_tokens", Json::null())
   }
   Json::object(obj)

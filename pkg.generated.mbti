@@ -41,8 +41,9 @@ pub(all) struct Call {
   status : String
   input_tokens : Int64?
   output_tokens : Int64?
-} derive(ToJson)
+}
 pub fn Call::to_json(Self) -> Json
+pub impl ToJson for Call
 
 pub(all) struct Finding {
   line : Int32
