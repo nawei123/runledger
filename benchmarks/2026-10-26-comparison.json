@@ -1,0 +1,93 @@
+{
+  "scope": "synthetic CLI end-to-end audit, process startup and parsing included",
+  "system": "Darwin",
+  "machine": "arm64",
+  "repeats": 5,
+  "baseline_source_commit": "765dd81e16d87ba7a95d55c3f35ff1c5e312462a",
+  "candidate_source_commit": "5378ae208dd454bcebdda0101318b26f5d7c6217",
+  "working_tree_dirty": false,
+  "binary_sha256": {
+    "baseline": "332cc604790916b2f14c93554aebb01f62ae819d598e034af67217269ebf58a4",
+    "candidate": "f0f52833035ce29f400adacfe4688db56d528b5c8d3610840370f30629750782"
+  },
+  "results": [
+    {
+      "tasks": 1000,
+      "calls": 2000,
+      "report_equivalence": true,
+      "seconds": {
+        "baseline": [
+          0.013146375000000002,
+          0.01283949999999999,
+          0.012917958000000007,
+          0.012717041000000012,
+          0.012739875000000012
+        ],
+        "candidate": [
+          0.010769416000000004,
+          0.010619834000000009,
+          0.010571665999999993,
+          0.01066879200000001,
+          0.010610959000000003
+        ]
+      },
+      "median_seconds": {
+        "baseline": 0.01283949999999999,
+        "candidate": 0.010619834000000009
+      },
+      "median_speedup": 1.2090113649610699
+    },
+    {
+      "tasks": 10000,
+      "calls": 20000,
+      "report_equivalence": true,
+      "seconds": {
+        "baseline": [
+          0.27452104099999997,
+          0.27377929199999984,
+          0.274879458,
+          0.2737106249999999,
+          0.27198945799999974
+        ],
+        "candidate": [
+          0.09047041700000003,
+          0.09122333299999985,
+          0.090615208,
+          0.08951425000000013,
+          0.09044083299999972
+        ]
+      },
+      "median_seconds": {
+        "baseline": 0.27377929199999984,
+        "candidate": 0.09047041700000003
+      },
+      "median_speedup": 3.026174755003061
+    },
+    {
+      "tasks": 50000,
+      "calls": 100000,
+      "report_equivalence": true,
+      "seconds": {
+        "baseline": [
+          4.659076499999999,
+          4.652234333000001,
+          4.664682916,
+          4.668618374999998,
+          4.681864542000003
+        ],
+        "candidate": [
+          0.4477933330000008,
+          0.4534602499999991,
+          0.4556590420000006,
+          0.45788149999999916,
+          0.45331354200000007
+        ]
+      },
+      "median_seconds": {
+        "baseline": 4.664682916,
+        "candidate": 0.4534602499999991
+      },
+      "median_speedup": 10.286861783364715
+    }
+  ]
+}

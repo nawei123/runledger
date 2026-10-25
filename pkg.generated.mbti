@@ -65,6 +65,7 @@ pub(all) struct DetailedReport {
   schema_version : Int32
   report : Report
   stats : AuditStats
+  group_totals_available : Bool
   groups : Array[UsageGroup]
   diagnostic_counts : Map[String, Int32]
 } derive(ToJson)

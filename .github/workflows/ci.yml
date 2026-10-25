@@ -25,6 +25,8 @@ jobs:
         run: moon test --target wasm-gc --deny-warn
       - name: Generate reproducible acceptance reports
         run: python3 scripts/acceptance.py
+      - name: Check fault combinations against independent reference
+        run: python3 scripts/check_invariants.py
       - name: Verify OpenTelemetry SDK interoperability
         shell: bash
         run: |

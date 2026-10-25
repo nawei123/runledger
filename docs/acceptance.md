@@ -8,6 +8,7 @@
 bash scripts/verify.sh
 moon test --target wasm-gc --deny-warn
 python3 scripts/acceptance.py
+python3 scripts/check_invariants.py
 ```
 
 `scripts/verify.sh` 包含依赖索引初始化、格式、静态检查、原生单元测试、构建、CLI集成测试及生成接口校验。验收演示脚本会生成 `reports/acceptance/`：
@@ -34,9 +35,13 @@ moon publish --dry-run
 发布成功后，使用独立临时工程从注册表安装并验证公共接口：
 
 ```sh
-python3 scripts/verify_published.py --version 0.1.1
+python3 scripts/verify_published.py --version 0.2.0
 ```
 
 该脚本不使用本地路径依赖，在native和wasm-gc分别验证已发布包。若注册表尚未更新或尚未发布，会报错，不应将其计为成功。
 
 mooncakes文档索引、报名审核、真实脱敏日志集成、赛事最终验收是不同事项，应分别确认状态。当前报名状态以参赛者反馈为准，审核结果以官方通知为准。
+
+## SDK导出互操作
+
+依照[SDK配置说明](span-profile.md)安装测试专用requirements-interop.txt，再执行scripts/interop_otel.py。真实SDK输出与合成模型计数分别标注；不能用该结果代替真实提供者调用证据。

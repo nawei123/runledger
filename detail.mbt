@@ -31,6 +31,7 @@ pub(all) struct DetailedReport {
   schema_version : Int32
   report : Report
   stats : AuditStats
+  group_totals_available : Bool
   groups : Array[UsageGroup]
   diagnostic_counts : Map[String, Int32]
 } derive(ToJson)
@@ -93,7 +94,12 @@ pub fn detail_records(raw : Parsed, manifest_text : String?) -> DetailedReport {
       duplicate_rows: counts.get("duplicate_call").unwrap_or(0),
       conflicting_rows: counts.get("conflicting_call").unwrap_or(0),
     },
-    groups,
+    group_totals_available: !counts.contains("aggregate_overflow"),
+    groups: if counts.contains("aggregate_overflow") {
+      []
+    } else {
+      groups
+    },
     diagnostic_counts: counts,
   }
 }

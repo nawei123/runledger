@@ -9,7 +9,7 @@ import tempfile
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--moon", default="moon")
-    parser.add_argument("--version", default="0.1.1")
+    parser.add_argument("--version", default="0.2.0")
     args = parser.parse_args()
     module = "nawei123/runledger"
     # Explicit tool paths must survive the change of working directory.
@@ -30,6 +30,9 @@ def main():
   assert_eq(report.findings.length(), 1)
   assert_eq(report.findings[0].code, "missing_stage")
   assert_eq(report.totals.input_tokens, 10L)
+  let detailed = @ledger.audit_detail(text, Some(manifest))
+  assert_eq(detailed.stats.accepted_calls, 1)
+  assert_eq(detailed.groups[0].totals.input_tokens, 10L)
 }
 ''', encoding="utf-8")
         for command in [[moon, "update"], [moon, "test", "--deny-warn"],

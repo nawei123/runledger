@@ -49,3 +49,19 @@ test "detail excludes conflicting identities from all groups" {
   assert_eq(detail.stats.conflicting_rows, 1)
   assert_eq(detail.groups.length(), 0)
 }
+
+///|
+test "aggregate overflow withholds misleading group totals" {
+  let text = detail_row(
+      "a", "answer", "\"input_tokens\":9007199254740991,\"output_tokens\":0",
+    ) +
+    "\n" +
+    detail_row(
+      "b", "review", "\"input_tokens\":9007199254740991,\"output_tokens\":0",
+    )
+  let detail = @runledger.audit_detail(text, None)
+  assert_false(detail.group_totals_available)
+  assert_eq(detail.groups.length(), 0)
+  assert_eq(detail.stats.accepted_calls, 2)
+  assert_eq(detail.diagnostic_counts["aggregate_overflow"], 1)
+}

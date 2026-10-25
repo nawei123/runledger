@@ -22,6 +22,8 @@ cd runledger
 moon run cmd/runledger -- audit examples/clean.jsonl examples/manifest.json
 moon run cmd/runledger -- audit examples/broken.jsonl examples/manifest.json
 moon run cmd/runledger -- audit-ollama examples/ollama.jsonl examples/manifest.json
+moon run cmd/runledger -- audit-spans examples/sdk-spans.jsonl examples/manifest.json
+moon run cmd/runledger -- audit-detail examples/clean.jsonl examples/manifest.json
 ```
 
 第一个命令返回 `ok: true`，共 4 次调用，输入 406 Token、输出 86 Token。第二个命令返回非零退出码，并报告重复调用、缺失用量、错误模型和缺失阶段。所有示例均为合成数据，不代表真实模型输出或比赛成绩。
@@ -51,7 +53,7 @@ moon run cmd/runledger -- audit /tmp/runledger-calls.jsonl examples/manifest.jso
 
 ## 库接口
 
-核心接口为 `audit(text)`、`audit_with_manifest(text, manifest_text)`、`import_ollama(text)` 和 `audit_records(parsed, manifest_text?)`。调用方可接入自有日志收集器；底层结构与完整接口见 `pkg.generated.mbti`。
+核心接口为 `audit(text)`、`audit_with_manifest(text, manifest_text)`、`import_ollama(text)` 和 `audit_records(parsed, manifest_text?)`。新增 `import_spans(text)`、`audit_detail(text, manifest_text?)`、`detail_records(parsed, manifest_text?)` 提供SDK导入和分组报告。调用方可接入自有日志收集器；底层结构与完整接口见 `pkg.generated.mbti`。
 
 [验收演示与发布检查](docs/acceptance.md) 提供可复现报告生成命令及独立注册表消费者验证。
 
@@ -60,15 +62,16 @@ moon run cmd/runledger -- audit /tmp/runledger-calls.jsonl examples/manifest.jso
 ```sh
 bash scripts/verify.sh
 moon test --target wasm-gc --deny-warn
+python3 scripts/check_invariants.py
 ```
 
 CLI 退出码：`0` 检查通过；`1` 有诊断；`2` 参数错误或输入文件无法读取。归一化命令如有格式错误，不输出部分 JSONL，而输出错误报告并退出 `1`。所有命令只读取输入文件、将结果写入 stdout，文件保存由调用方重定向。
 
 ## 兼容性与边界
 
-本地已验证 macOS arm64、moonc `v0.10.17+d971670cd` 的原生构建、21 项单元测试、6 项 CLI 集成测试；相同 21 项单元测试也在 wasm-gc 通过。GitHub Actions 配置覆盖 Linux 和 macOS，实际运行结果见 [CI 工作流](https://github.com/nawei123/runledger/actions/workflows/ci.yml)。
+本地已验证 macOS arm64、moonc `v0.10.17+d971670cd` 的原生构建、35 项单元测试、9 项 CLI 集成测试；相同 35 项单元测试也在 wasm-gc 通过。GitHub Actions 配置覆盖 Linux 和 macOS，实际运行结果见 [CI 工作流](https://github.com/nawei123/runledger/actions/workflows/ci.yml)。
 
-当前逐文件读入内存，适合中小型日志；未验证大规模吞吐。仅支持自定义规范化 JSONL 和指定 Ollama 封装格式，未声称兼容所有 Agent 框架。未接入真实模型运行日志，尚需补充脱敏真实样本的集成验证。
+当前逐文件读入内存。已对10万条合成调用进行本机端到端基准，结果及局限见[研究与改进说明](docs/market-research.md)，未验证持续生产吞吐或内存峰值。支持规范化JSONL、指定Ollama封装及[有明确边界的SDK span配置](docs/span-profile.md)，不支持任意OTLP或所有Agent框架。实际SDK导出互操作已验证，模型用量仍为合成；真实脱敏提供者日志验证尚未完成。
 
 离线日志可被修改，检查结果不能证明调用确实发生、原始账单真实、答案正确或符合某项比赛要求。报告不会复制 prompt 或回答正文；标识字段和 manifest 缺失项仍会出现在报告里，分享前应自行脱敏。
 
@@ -77,3 +80,13 @@ CLI 退出码：`0` 检查通过；`1` 有诊断；`2` 参数错误或输入文�
 [查重与差异说明](docs/ecosystem.md) 列出了现有 JSON、tracing、Agent 监控和回放项目。RunLedger 聚焦已有调用记录的离线一致性与任务覆盖检查，不提供新的 JSON 解析器或 Agent 运行框架。
 
 Apache-2.0。依赖 `moonbitlang/core` 和 `moonbitlang/x@0.5.6`，未复制其他 Agent 项目实现。开发使用了 AI 辅助，设计、实现与测试需要由维护者复核并能够解释。
+
+## 详细报告与外部数据
+
+`audit-detail`在原有报告外增加schema_version、行/身份统计、诊断计数和按运行/阶段/模型的分组。各组显示缺少输入及输出计数的调用数。若全局累计量溢出安全范围，group_totals_available为false并清空groups，避免分组和受限总量形成误导性对照。旧audit输出结构保持不变。
+
+manifest是检查合同，不是过滤器：混入的外部运行/模型记录会使检查失败，其已知用量仍属于输入日志观察值。分组内用量完整不表示任务覆盖完整；使用总量作实验结论前应检查全局report.ok与合同是否适用。
+
+SDK配置要求显式模型调用类型、任务标识和OK/ERROR状态；UNSET不会被当作成功，父级Agent汇总span不能混作模型调用，语义属性冲突会被报告。见[配置说明](docs/span-profile.md)。
+
+同类方案、借鉴关系、改进内容及基准方法见[市场研究](docs/market-research.md)。本项目主张MoonBit生态内的工程集成与性能改进，不主张首创Token统计或trace合同。

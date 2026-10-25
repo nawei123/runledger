@@ -18,6 +18,9 @@ def main():
                         default=ROOT / "_build/native/debug/build/cmd/runledger/runledger.exe")
     parser.add_argument("--sizes", type=int, nargs="+", default=[100, 1000, 5000])
     parser.add_argument("--repeats", type=int, default=3)
+    parser.add_argument("--baseline-commit", default=None,
+                        help="Declared baseline source revision; binary hash is recorded independently")
+    parser.add_argument("--build-profile", default="unspecified")
     args = parser.parse_args()
     if args.repeats < 1 or any(x < 1 for x in args.sizes):
         parser.error("sizes and repeats must be positive")
@@ -63,7 +66,8 @@ def main():
         print(json.dumps(result), flush=True)
     data = {"scope": "synthetic CLI end-to-end audit, process startup and parsing included",
             "system": platform.system(), "machine": platform.machine(), "repeats": args.repeats,
-            "baseline_source_commit": "765dd81e16d87ba7a95d55c3f35ff1c5e312462a",
+            "baseline_source_commit_declared": args.baseline_commit,
+            "build_profile_declared": args.build_profile,
             "candidate_source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
             "working_tree_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip()),
             "binary_sha256": {name: hashlib.sha256(path.read_bytes()).hexdigest() for name, path in binaries.items()},
