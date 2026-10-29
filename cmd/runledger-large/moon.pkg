@@ -1,0 +1,11 @@
+import {
+  "nawei123/runledger/external" @engine,
+  "nawei123/runledger/nativeio" @disk,
+  "moonbitlang/core/env",
+  "moonbitlang/core/string",
+  "moonbitlang/x/sys",
+}
+
+pkgtype(kind: "executable")
+
+supported_targets = "native"

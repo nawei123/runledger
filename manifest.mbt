@@ -50,48 +50,14 @@ pub fn decode_manifest(value : Json) -> Manifest raise DecodeError {
 /// Only successful attempts in the declared run/model may satisfy coverage.
 pub fn check_coverage(parsed : Parsed, manifest : Manifest) -> Array[Finding] {
   let findings : Array[Finding] = []
-  let covered : Map[(String, String), Bool] = Map([])
-  let tasks : Map[String, Bool] = Map([])
-  let stages : Map[String, Bool] = Map([])
-  for task in manifest.task_ids {
-    tasks.set(task, true)
-  }
-  for stage in manifest.required_stages {
-    stages.set(stage, true)
-  }
+  let index = CoverageIndex::new(manifest)
   for record in parsed.records {
-    let call = record.call
-    let mut valid = true
-    for
-      (matches, code) in [
-        (call.run_id == manifest.run_id, "unexpected_run"),
-        (call.model == manifest.model, "unexpected_model"),
-        (tasks.contains(call.task_id), "unexpected_task"),
-        (stages.contains(call.stage), "unexpected_stage"),
-      ] {
-      if !matches {
-        findings.push({
-          line: record.line,
-          code,
-          message: "record falls outside the expected manifest",
-        })
-        valid = false
-      }
-    }
-    if valid && call.status == "ok" {
-      covered.set((call.task_id, call.stage), true)
+    for finding in index.observe(record) {
+      findings.push(finding)
     }
   }
-  for task in manifest.task_ids {
-    for stage in manifest.required_stages {
-      if !covered.contains((task, stage)) {
-        findings.push({
-          line: 0,
-          code: "missing_stage",
-          message: "no successful attempt for task=" + task + ", stage=" + stage,
-        })
-      }
-    }
+  for finding in index.missing() {
+    findings.push(finding)
   }
   findings
 }

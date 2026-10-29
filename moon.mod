@@ -1,6 +1,6 @@
 name = "nawei123/runledger"
 
-version = "0.2.0"
+version = "0.3.0"
 
 readme = "README.md"
 
@@ -12,7 +12,7 @@ keywords = [ "agent", "audit", "jsonl", "tokens" ]
 
 preferred_target = "native"
 
-description = "Offline integrity checks and token accounting for agent run logs"
+description = "Offline agent-log auditing with external merge and resumable checkpoints"
 
 import {
   "moonbitlang/x@0.5.6",

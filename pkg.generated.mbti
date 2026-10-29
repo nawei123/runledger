@@ -61,6 +61,16 @@ pub(all) struct Call {
 pub fn Call::to_json(Self) -> Json
 pub impl ToJson for Call
 
+pub struct CoverageIndex {
+  manifest : Manifest
+  tasks : Map[String, Bool]
+  stages : Map[String, Bool]
+  covered : Map[(String, String), Bool]
+}
+pub fn CoverageIndex::missing(Self) -> Iter[Finding]
+pub fn CoverageIndex::new(Manifest) -> Self
+pub fn CoverageIndex::observe(Self, Record) -> Array[Finding]
+
 pub(all) struct DetailedReport {
   schema_version : Int32
   report : Report
@@ -114,6 +124,17 @@ pub(all) struct Totals {
   failed_calls : Int32
 } derive(ToJson)
 pub fn Totals::to_json(Self) -> Json
+
+pub struct UsageFold {
+  mut calls : Int32
+  mut input : Int64
+  mut output : Int64
+  mut unknown : Int32
+  mut failed : Int32
+}
+pub fn UsageFold::new() -> Self
+pub fn UsageFold::observe(Self, Record) -> Array[Finding]
+pub fn UsageFold::totals(Self) -> Totals
 
 pub(all) struct UsageGroup {
   run_id : String

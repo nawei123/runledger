@@ -27,10 +27,7 @@ pub extend Report with ToJson::{to_json}
 /// Missing usage stays unknown; it must never silently become a zero count.
 pub fn account(parsed : Parsed) -> Report {
   let findings = parsed.findings.copy()
-  let mut input = 0L
-  let mut output = 0L
-  let mut unknown = 0
-  let mut failed = 0
+  let fold = UsageFold::new()
   if parsed.records.is_empty() {
     findings.push({
       line: 0,
@@ -39,43 +36,14 @@ pub fn account(parsed : Parsed) -> Report {
     })
   }
   for record in parsed.records {
-    let call = record.call
-    if call.status == "error" {
-      failed += 1
-    }
-    if call.input_tokens is None || call.output_tokens is None {
-      unknown += 1
-      findings.push({
-        line: record.line,
-        code: "missing_usage",
-        message: "input or output usage is unknown",
-      })
-    }
-    // Keep aggregate integers exact in JSON and avoid overflowing Int64.
-    let incoming = call.input_tokens.unwrap_or(0L)
-    let outgoing = call.output_tokens.unwrap_or(0L)
-    if input > 9007199254740991L - incoming ||
-      output > 9007199254740991L - outgoing {
-      findings.push({
-        line: record.line,
-        code: "aggregate_overflow",
-        message: "aggregate exceeds interoperable JSON integer range; row usage excluded",
-      })
-    } else {
-      input += incoming
-      output += outgoing
+    for finding in fold.observe(record) {
+      findings.push(finding)
     }
   }
   {
     ok: findings.is_empty(),
     usage_complete: findings.is_empty(),
-    totals: {
-      calls: parsed.records.length(),
-      input_tokens: input,
-      output_tokens: output,
-      unknown_usage_calls: unknown,
-      failed_calls: failed,
-    },
+    totals: fold.totals(),
     findings,
   }
 }

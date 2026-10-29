@@ -12,6 +12,18 @@ moon add nawei123/runledger
 
 在使用该库的包的 `moon.pkg` 中添加 `"nawei123/runledger" @ledger` 导入。仅测试使用的依赖应放入 `import { ... } for "test"`，避免开启 `--deny-warn` 时出现未使用导入警告。
 
+## 大规模日志与中断恢复（0.3.0）
+
+新增原生Linux/macOS外部审计：按受限批次读入和排序，通过磁盘多路归并完成跨分片对账，再按原始行号归并。完整诊断逐条落盘，支持内容绑定的检查点、独占锁和中断后恢复。它用磁盘与额外处理时间换取较低常驻内存，batch_bytes不是硬RSS限制。
+
+```sh
+job_root=$(mktemp -d)
+moon run cmd/runledger-large -- examples/clean.jsonl "$job_root/job" --manifest examples/manifest.json
+moon run cmd/runledger-large -- examples/clean.jsonl "$job_root/job" --manifest examples/manifest.json --resume
+```
+
+[完整架构、恢复协议与边界](docs/external-audit.md)说明为什么仅按行读取不够、如何撤销跨分片冲突以及为何需要恢复原始顺序。旧audit接口与输出结构保留；新模式的完整诊断在工作目录findings.jsonl，摘要输出使用独立schema。
+
 ## 快速运行
 
 安装 [MoonBit CLI](https://www.moonbitlang.com/download)，获取源码并进入项目目录：
@@ -69,9 +81,9 @@ CLI 退出码：`0` 检查通过；`1` 有诊断；`2` 参数错误或输入文�
 
 ## 兼容性与边界
 
-本地已验证 macOS arm64、moonc `v0.10.17+d971670cd` 的原生构建、35 项单元测试、9 项 CLI 集成测试；相同 35 项单元测试也在 wasm-gc 通过。GitHub Actions 配置覆盖 Linux 和 macOS，实际运行结果见 [CI 工作流](https://github.com/nawei123/runledger/actions/workflows/ci.yml)。
+本地已验证 macOS arm64、moonc `v0.10.17+d971670cd` 的原生构建、39 项单元测试（37项可移植核心、2项原生摘要向量）、9 项原CLI集成测试及16项外部引擎黑盒测试；37项可移植核心测试在wasm-gc通过。GitHub Actions 配置覆盖 Linux 和 macOS，实际运行结果见 [CI 工作流](https://github.com/nawei123/runledger/actions/workflows/ci.yml)。
 
-当前逐文件读入内存。已对10万条合成调用进行本机端到端基准，结果及局限见[研究与改进说明](docs/market-research.md)，未验证持续生产吞吐或内存峰值。支持规范化JSONL、指定Ollama封装及[有明确边界的SDK span配置](docs/span-profile.md)，不支持任意OTLP或所有Agent框架。实际SDK导出互操作已验证，模型用量仍为合成；真实脱敏提供者日志验证尚未完成。
+旧audit模式逐文件读入内存，新external模式按受限批次处理。已对10万条合成调用进行本机端到端基准，结果及局限见[研究与改进说明](docs/market-research.md)，未验证持续生产吞吐或内存峰值。支持规范化JSONL、指定Ollama封装及[有明确边界的SDK span配置](docs/span-profile.md)，不支持任意OTLP或所有Agent框架。实际SDK导出互操作已验证，模型用量仍为合成；真实脱敏提供者日志验证尚未完成。
 
 离线日志可被修改，检查结果不能证明调用确实发生、原始账单真实、答案正确或符合某项比赛要求。报告不会复制 prompt 或回答正文；标识字段和 manifest 缺失项仍会出现在报告里，分享前应自行脱敏。
 

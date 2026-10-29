@@ -1,0 +1,26 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "nawei123/runledger/external"
+
+// Values
+pub fn run(String, String, String?, Options, recover? : Bool, pause_after? : Int32) -> Json raise
+
+// Errors
+pub(all) suberror EngineError {
+  EngineError(String)
+}
+
+// Types and methods
+pub(all) struct Options {
+  batch_bytes : Int32
+  batch_rows : Int32
+  fan_in : Int32
+  max_line_bytes : Int32
+  sample_limit : Int32
+  format : String
+} derive(ToJson)
+pub fn Options::defaults() -> Self
+pub fn Options::to_json(Self) -> Json
+
+// Type aliases
+
+// Traits

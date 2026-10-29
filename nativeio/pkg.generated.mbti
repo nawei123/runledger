@@ -1,0 +1,51 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "nawei123/runledger/nativeio"
+
+// Values
+pub fn atomic_rename(String, String, String) -> Unit raise IOError
+
+pub fn create_workspace(String) -> Unit raise IOError
+
+pub fn file_sha256(String) -> String raise IOError
+
+pub fn file_size(String) -> Int64 raise IOError
+
+pub fn lock_workspace(String) -> File raise IOError
+
+pub fn open(String, write? : Bool) -> File raise IOError
+
+pub fn sha256(String) -> String
+
+pub fn write_atomic(String, String, String) -> Unit raise IOError
+
+// Errors
+pub(all) suberror IOError {
+  IOError(String)
+}
+
+// Types and methods
+pub struct File {
+  handle : Handle
+  mut closed : Bool
+}
+pub fn File::close(Self) -> Unit
+pub fn File::position(Self) -> Int64 raise IOError
+pub fn File::read_line(Self, Int32) -> Line raise IOError
+pub fn File::seek(Self, Int64) -> Unit raise IOError
+pub fn File::sync(Self) -> Unit raise IOError
+pub fn File::write(Self, String) -> Unit raise IOError
+pub fn File::write_line(Self, String) -> Unit raise IOError
+
+#external
+pub type Handle
+
+pub(all) enum Line {
+  End
+  Text(String)
+  TooLong
+  InvalidUtf8
+}
+
+// Type aliases
+
+// Traits

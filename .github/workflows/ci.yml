@@ -23,6 +23,8 @@ jobs:
         run: bash scripts/verify.sh
       - name: Test portable core
         run: moon test --target wasm-gc --deny-warn
+      - name: Verify external audit, interruption recovery and integrity
+        run: python3 scripts/test_external.py
       - name: Generate reproducible acceptance reports
         run: python3 scripts/acceptance.py
       - name: Check fault combinations against independent reference

@@ -1,0 +1,10 @@
+import {
+  "nawei123/runledger" @ledger,
+  "nawei123/runledger/nativeio" @disk,
+  "moonbitlang/core/json",
+  "moonbitlang/core/string",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/x/fs",
+}
+
+supported_targets = "native"
