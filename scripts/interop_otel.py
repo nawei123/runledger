@@ -4,6 +4,7 @@ import io
 import json
 import pathlib
 import subprocess
+import tempfile
 
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
@@ -54,12 +55,23 @@ def main():
     assert sum(int(group["totals"]["input_tokens"]) for group in detailed["groups"]) == 406
     (OUTPUT / "report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     (OUTPUT / "detail.json").write_text(json.dumps(detailed, indent=2) + "\n", encoding="utf-8")
+    large = ROOT / "_build/native/debug/build/cmd/runledger-large/runledger-large.exe"
+    with tempfile.TemporaryDirectory(prefix="runledger-sdk-external-") as directory:
+        workspace = pathlib.Path(directory) / "job"
+        checked = subprocess.run([str(large), str(source), str(workspace), "--manifest", "examples/manifest.json",
+                                  "--format", "sdk", "--batch-rows", "1", "--fan-in", "2"],
+                                 cwd=ROOT, text=True, capture_output=True, check=True)
+        external = json.loads(checked.stdout)
+        assert external["report"]["ok"] and external["report"]["totals"] == report["totals"]
+        accepted = workspace / external["artifacts"]["accepted_records"]
+        assert "Synthetic prompt" not in accepted.read_text()
+        (OUTPUT / "external-report.json").write_text(json.dumps(external, indent=2) + "\n", encoding="utf-8")
     metadata = {"sdk": "opentelemetry-sdk", "sdk_version": importlib.metadata.version("opentelemetry-sdk"),
                 "real_sdk_execution": True, "real_model_execution": False,
-                "synthetic_model_usage": True, "captured_spans": 4,
+                "synthetic_model_usage": True, "captured_spans": 4, "external_audit_verified": True,
                 "input_tokens": 406, "output_tokens": 86, "passed": True}
     (OUTPUT / "provenance.json").write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
-    print("SDK interoperability passed: 4 real SDK spans, synthetic model usage, no provider/API call")
+    print("SDK interoperability passed: 4 real SDK spans through in-memory and external audit, synthetic model usage, no provider/API call")
 
 
 if __name__ == "__main__":

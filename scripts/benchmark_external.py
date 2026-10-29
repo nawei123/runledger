@@ -6,6 +6,7 @@ import math
 import os
 import pathlib
 import platform
+import shutil
 import subprocess
 import time
 
@@ -42,6 +43,14 @@ def main():
     binaries=ROOT/f'_build/native/{profile}/build/cmd'
     legacy=binaries/'runledger/runledger.exe';external=binaries/'runledger-large/runledger-large.exe'
     output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
+    # Freeze executable copies so concurrent rebuilds cannot change what is measured.
+    frozen=output/'binaries';frozen.mkdir(exist_ok=True)
+    for executable,name in [(legacy,'in-memory.exe'),(external,'external.exe')]:
+        before=digest(executable)
+        shutil.copy2(executable,frozen/name)
+        if digest(frozen/name)!=before or digest(executable)!=before:
+            raise RuntimeError('Executable changed while snapshotting; finish builds first')
+    legacy=frozen/'in-memory.exe';external=frozen/'external.exe'
     commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip())
     results=[]
@@ -73,6 +82,7 @@ def main():
     summary={'source_commit':commit,'working_tree_dirty':dirty,'system':platform.system(),
              'machine':platform.machine(),'profile':'native-'+profile,'method':'One run per mode/size; POSIX wait4 per-child peak RSS and end-to-end wall time. No medians or production guarantee.',
              'binary_sha256':{'in_memory':digest(legacy),'external':digest(external)},
+             'benchmark_binaries_are_immutable_copies':True,
              'synthetic_data':True,'real_model_calls':False,'manifest_used':False,
              'limitations':'Batch bytes is a working-set target, not a hard RSS cap; manifest memory and output disk are separate. External audit trades I/O and time for lower RAM. No OOM, streaming provider, or real-user claim.',
              'results':results}

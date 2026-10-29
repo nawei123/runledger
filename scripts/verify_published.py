@@ -9,7 +9,7 @@ import tempfile
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--moon", default="moon")
-    parser.add_argument("--version", default="0.2.0")
+    parser.add_argument("--version", default="0.3.0")
     args = parser.parse_args()
     module = "nawei123/runledger"
     # Explicit tool paths must survive the change of working directory.
@@ -33,8 +33,27 @@ def main():
   let detailed = @ledger.audit_detail(text, Some(manifest))
   assert_eq(detailed.stats.accepted_calls, 1)
   assert_eq(detailed.groups[0].totals.input_tokens, 10L)
+  let fold = @ledger.UsageFold::new()
+  for record in @ledger.parse_jsonl(text).records { ignore(fold.observe(record)) }
+  assert_eq(fold.totals().input_tokens, 10L)
 }
 ''', encoding="utf-8")
+        # A native-only consumer proves that the published archive includes its C stub.
+        native = root / "native_consumer"
+        native.mkdir()
+        (native / "moon.pkg").write_text('import { "nawei123/runledger/external" @engine, } for "test"\nsupported_targets = "native"\n')
+        source = root / "source.jsonl"
+        source.write_text(json.dumps(dict(run_id="r", task_id="q", stage="answer", call_id="a", model="m", status="ok", input_tokens=10, output_tokens=2)) + "\n")
+        native_code = """test "published native external engine and recovery" {
+  let result = @engine.run(SOURCE, WORKSPACE, None, @engine.Options::defaults())
+  guard result is Object(obj) else { fail("invalid report") }
+  guard obj.get("report") is Some(Object(report)) else { fail("missing report") }
+  assert_eq(report.get("ok"), Some(Json::boolean(true)))
+  let replay = @engine.run(SOURCE, WORKSPACE, None, @engine.Options::defaults(), recover=true)
+  assert_eq(result, replay)
+}
+""".replace("SOURCE", json.dumps(str(source))).replace("WORKSPACE", json.dumps(str(root / "external-job")))
+        (native / "consumer_test.mbt").write_text(native_code)
         for command in [[moon, "update"], [moon, "test", "--deny-warn"],
                         [moon, "test", "--target", "wasm-gc", "--deny-warn"]]:
             subprocess.run(command, cwd=root, check=True)
