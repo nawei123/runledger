@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "report": {
+    "ok": false,
+    "usage_complete": false,
+    "totals": {
+      "calls": 2,
+      "input_tokens": "4",
+      "output_tokens": "3",
+      "unknown_usage_calls": 1,
+      "failed_calls": 0
+    },
+    "findings": [
+      {
+        "line": 1,
+        "code": "missing_usage",
+        "message": "input or output usage is unknown"
+      }
+    ]
+  },
+  "stats": {
+    "parsed_calls": 2,
+    "accepted_calls": 2,
+    "duplicate_rows": 0,
+    "conflicting_rows": 0
+  },
+  "group_totals_available": true,
+  "groups": [
+    {
+      "run_id": "review-demo",
+      "stage": "answer",
+      "model": "demo-model",
+      "totals": {
+        "calls": 1,
+        "input_tokens": "0",
+        "output_tokens": "2",
+        "unknown_usage_calls": 1,
+        "failed_calls": 0
+      },
+      "usage_complete": false,
+      "missing_input_calls": 1,
+      "missing_output_calls": 0
+    },
+    {
+      "run_id": "review-demo",
+      "stage": "review",
+      "model": "demo-model",
+      "totals": {
+        "calls": 1,
+        "input_tokens": "4",
+        "output_tokens": "1",
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "usage_complete": true,
+      "missing_input_calls": 0,
+      "missing_output_calls": 0
+    }
+  ],
+  "diagnostic_counts": {
+    "missing_usage": 1
+  }
+}

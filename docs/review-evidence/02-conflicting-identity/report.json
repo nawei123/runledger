@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "report": {
+    "ok": false,
+    "usage_complete": false,
+    "totals": {
+      "calls": 1,
+      "input_tokens": "4",
+      "output_tokens": "1",
+      "unknown_usage_calls": 0,
+      "failed_calls": 0
+    },
+    "findings": [
+      {
+        "line": 2,
+        "code": "conflicting_call",
+        "message": "conflicts with line 1; all copies excluded"
+      },
+      {
+        "line": 0,
+        "code": "missing_stage",
+        "message": "no successful attempt for task=q1, stage=answer"
+      }
+    ]
+  },
+  "stats": {
+    "parsed_calls": 3,
+    "accepted_calls": 1,
+    "duplicate_rows": 0,
+    "conflicting_rows": 1
+  },
+  "group_totals_available": true,
+  "groups": [
+    {
+      "run_id": "review-demo",
+      "stage": "review",
+      "model": "demo-model",
+      "totals": {
+        "calls": 1,
+        "input_tokens": "4",
+        "output_tokens": "1",
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "usage_complete": true,
+      "missing_input_calls": 0,
+      "missing_output_calls": 0
+    }
+  ],
+  "diagnostic_counts": {
+    "conflicting_call": 1,
+    "missing_stage": 1
+  }
+}

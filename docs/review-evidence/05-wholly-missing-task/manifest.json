@@ -1,0 +1,12 @@
+{
+  "run_id": "review-demo",
+  "model": "demo-model",
+  "task_ids": [
+    "q1",
+    "q2"
+  ],
+  "required_stages": [
+    "answer",
+    "review"
+  ]
+}

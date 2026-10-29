@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "date_Asia_Shanghai": "2026-10-30",
+  "implementation_reference_commit": "2da6e6404ad835f518412dc4676ed0d9ec28e9eb",
+  "implementation_has_uncommitted_diff": false,
+  "executable_sha256": "06a87cabab288c74741e1476aa4d64fb7df9ec2b603d183199a6a1b65fd3512b",
+  "synthetic_data": true,
+  "real_model_calls": false,
+  "competition_approval": false,
+  "purpose": "Bounded technical demonstrations of existing 0.2.0 behavior; not new core functionality.",
+  "cases": [
+    {
+      "name": "01-clean-control",
+      "description": "Known-complete control: successful answer and review.",
+      "command": "audit-detail",
+      "exit_code": 0,
+      "totals": {
+        "calls": 2,
+        "input_tokens": 14,
+        "output_tokens": 3,
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "diagnostic_codes": [],
+      "usage_complete": true,
+      "expected_checks_passed": true,
+      "input_sha256": "e8d16ddc5153e2f45e2aceb81038ea318817b002e2346677a7b495e0c819bdc5"
+    },
+    {
+      "name": "02-conflicting-identity",
+      "description": "Exclude both conflicting copies from accounting and coverage; reverse-order totals agree.",
+      "command": "audit-detail",
+      "exit_code": 1,
+      "totals": {
+        "calls": 1,
+        "input_tokens": 4,
+        "output_tokens": 1,
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "diagnostic_codes": [
+        "conflicting_call",
+        "missing_stage"
+      ],
+      "usage_complete": false,
+      "expected_checks_passed": true,
+      "input_sha256": "3031654d65d38c3d8cd1aa7630f1a84beefdeee523e9d2182f78228b14fd5e7b"
+    },
+    {
+      "name": "03-failed-attempt-and-retry",
+      "description": "Retain known usage of failed attempts while a successful retry satisfies stage coverage.",
+      "command": "audit-detail",
+      "exit_code": 0,
+      "totals": {
+        "calls": 3,
+        "input_tokens": 114,
+        "output_tokens": 23,
+        "unknown_usage_calls": 0,
+        "failed_calls": 1
+      },
+      "diagnostic_codes": [],
+      "usage_complete": true,
+      "expected_checks_passed": true,
+      "input_sha256": "30b74d8367c07ef10c499d835b82055feab1b7864b5ce8c916c1b89c945cda2e"
+    },
+    {
+      "name": "04-directional-unknown-usage",
+      "description": "Missing input remains unknown even though both successful stages are present.",
+      "command": "audit-detail",
+      "exit_code": 1,
+      "totals": {
+        "calls": 2,
+        "input_tokens": 4,
+        "output_tokens": 3,
+        "unknown_usage_calls": 1,
+        "failed_calls": 0
+      },
+      "diagnostic_codes": [
+        "missing_usage"
+      ],
+      "usage_complete": false,
+      "expected_checks_passed": true,
+      "input_sha256": "2378260261acd06d1b331fbc22553a880ee69c874db06b8ce42267e87ad14bc8"
+    },
+    {
+      "name": "05-wholly-missing-task",
+      "description": "An independent manifest detects q2 even when q2 never occurs in the log.",
+      "command": "audit-detail",
+      "exit_code": 1,
+      "totals": {
+        "calls": 2,
+        "input_tokens": 14,
+        "output_tokens": 3,
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "diagnostic_codes": [
+        "missing_stage",
+        "missing_stage"
+      ],
+      "usage_complete": true,
+      "expected_checks_passed": true,
+      "input_sha256": "e8d16ddc5153e2f45e2aceb81038ea318817b002e2346677a7b495e0c819bdc5"
+    },
+    {
+      "name": "06-sdk-unset-status",
+      "description": "Do not turn an SDK UNSET status into evidence of successful answer completion.",
+      "command": "audit-spans",
+      "exit_code": 1,
+      "totals": {
+        "calls": 1,
+        "input_tokens": 4,
+        "output_tokens": 1,
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "diagnostic_codes": [
+        "invalid_span",
+        "missing_stage"
+      ],
+      "usage_complete": false,
+      "expected_checks_passed": true,
+      "input_sha256": "399136965f164a48977f227dff04991c07ac97cd43b95eb4d1b7affec44a480b"
+    },
+    {
+      "name": "07-conflicting-semantic-usage",
+      "description": "Reject disagreeing GenAI/OpenInference input-token totals rather than silently choosing one.",
+      "command": "audit-spans",
+      "exit_code": 1,
+      "totals": {
+        "calls": 1,
+        "input_tokens": 4,
+        "output_tokens": 1,
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "diagnostic_codes": [
+        "invalid_span",
+        "missing_stage"
+      ],
+      "usage_complete": false,
+      "expected_checks_passed": true,
+      "input_sha256": "3e59f7a2a40e029888ebf931218119175456e4243559718e3dd68e6c17ca5b2b"
+    },
+    {
+      "name": "08-inclusive-cache-usage",
+      "description": "Do not add cache detail to an already-inclusive GenAI input-token total.",
+      "command": "audit-spans",
+      "exit_code": 0,
+      "totals": {
+        "calls": 2,
+        "input_tokens": 104,
+        "output_tokens": 21,
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "diagnostic_codes": [],
+      "usage_complete": true,
+      "expected_checks_passed": true,
+      "input_sha256": "9a37e78dfec6bf2e80b4e3f915eac3659d4a2ea99914ef27bd72f81dfbaaa756"
+    },
+    {
+      "name": "09-unsafe-aggregate",
+      "description": "Reject an unsafe aggregate and explicitly withhold group totals; avoid misleading reconciled sums.",
+      "command": "audit-detail",
+      "exit_code": 1,
+      "totals": {
+        "calls": 2,
+        "input_tokens": 9007199254740991,
+        "output_tokens": 0,
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "diagnostic_codes": [
+        "aggregate_overflow"
+      ],
+      "usage_complete": false,
+      "expected_checks_passed": true,
+      "input_sha256": "f6316d6dcb64cc7ac2d59368bfd6060a8bcddf68155113fbe4b90a17fc9ab6d0"
+    }
+  ]
+}

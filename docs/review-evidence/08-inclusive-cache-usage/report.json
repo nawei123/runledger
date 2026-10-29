@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "usage_complete": true,
+  "totals": {
+    "calls": 2,
+    "input_tokens": "104",
+    "output_tokens": "21",
+    "unknown_usage_calls": 0,
+    "failed_calls": 0
+  },
+  "findings": []
+}

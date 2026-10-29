@@ -1,0 +1,23 @@
+{
+  "ok": false,
+  "usage_complete": false,
+  "totals": {
+    "calls": 1,
+    "input_tokens": "4",
+    "output_tokens": "1",
+    "unknown_usage_calls": 0,
+    "failed_calls": 0
+  },
+  "findings": [
+    {
+      "line": 1,
+      "code": "invalid_span",
+      "message": "span status must explicitly be OK or ERROR; UNSET is unknown"
+    },
+    {
+      "line": 0,
+      "code": "missing_stage",
+      "message": "no successful attempt for task=q1, stage=answer"
+    }
+  ]
+}

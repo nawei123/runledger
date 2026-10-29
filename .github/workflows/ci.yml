@@ -27,6 +27,8 @@ jobs:
         run: python3 scripts/acceptance.py
       - name: Check fault combinations against independent reference
         run: python3 scripts/check_invariants.py
+      - name: Replay documented technical examples
+        run: python3 scripts/review_evidence.py --date "$(TZ=Asia/Shanghai date +%F)"
       - name: Verify OpenTelemetry SDK interoperability
         shell: bash
         run: |

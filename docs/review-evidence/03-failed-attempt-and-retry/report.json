@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "report": {
+    "ok": true,
+    "usage_complete": true,
+    "totals": {
+      "calls": 3,
+      "input_tokens": "114",
+      "output_tokens": "23",
+      "unknown_usage_calls": 0,
+      "failed_calls": 1
+    },
+    "findings": []
+  },
+  "stats": {
+    "parsed_calls": 3,
+    "accepted_calls": 3,
+    "duplicate_rows": 0,
+    "conflicting_rows": 0
+  },
+  "group_totals_available": true,
+  "groups": [
+    {
+      "run_id": "review-demo",
+      "stage": "answer",
+      "model": "demo-model",
+      "totals": {
+        "calls": 2,
+        "input_tokens": "110",
+        "output_tokens": "22",
+        "unknown_usage_calls": 0,
+        "failed_calls": 1
+      },
+      "usage_complete": true,
+      "missing_input_calls": 0,
+      "missing_output_calls": 0
+    },
+    {
+      "run_id": "review-demo",
+      "stage": "review",
+      "model": "demo-model",
+      "totals": {
+        "calls": 1,
+        "input_tokens": "4",
+        "output_tokens": "1",
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "usage_complete": true,
+      "missing_input_calls": 0,
+      "missing_output_calls": 0
+    }
+  ],
+  "diagnostic_counts": {}
+}

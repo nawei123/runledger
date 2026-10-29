@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "report": {
+    "ok": false,
+    "usage_complete": false,
+    "totals": {
+      "calls": 2,
+      "input_tokens": "9007199254740991",
+      "output_tokens": "0",
+      "unknown_usage_calls": 0,
+      "failed_calls": 0
+    },
+    "findings": [
+      {
+        "line": 2,
+        "code": "aggregate_overflow",
+        "message": "aggregate exceeds interoperable JSON integer range; row usage excluded"
+      }
+    ]
+  },
+  "stats": {
+    "parsed_calls": 2,
+    "accepted_calls": 2,
+    "duplicate_rows": 0,
+    "conflicting_rows": 0
+  },
+  "group_totals_available": false,
+  "groups": [],
+  "diagnostic_counts": {
+    "aggregate_overflow": 1
+  }
+}

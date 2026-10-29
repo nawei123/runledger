@@ -90,3 +90,5 @@ manifest是检查合同，不是过滤器：混入的外部运行/模型记录�
 SDK配置要求显式模型调用类型、任务标识和OK/ERROR状态；UNSET不会被当作成功，父级Agent汇总span不能混作模型调用，语义属性冲突会被报告。见[配置说明](docs/span-profile.md)。
 
 同类方案、借鉴关系、改进内容及基准方法见[市场研究](docs/market-research.md)。本项目主张MoonBit生态内的工程集成与性能改进，不主张首创Token统计或trace合同。
+
+[技术补充与九个可重放实例](docs/review-supplement.md)提供具体输入、诊断、实现位置和证据边界。新增实例用于解释已有0.2.0行为，不代表新增核心能力或赛事认可。
