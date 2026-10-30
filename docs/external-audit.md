@@ -77,3 +77,5 @@ python3 scripts/benchmark_external.py --sizes 100000 1000000 --output reports/ex
 外部引擎黑盒覆盖跨分片冲突、原始顺序相关溢出、每个可提交检查点的恢复、真实SIGKILL、输入/清单/选项变化、摘要损坏、锁、非法UTF-8、过长行、诊断样本字节界限、多个适配器及25组固定种子的故障组合；与旧内存引擎及独立Python参考核对。性能脚本使用POSIX wait4收集每个子进程峰值RSS，比较同一构建的两种模式；一次观测不当作中位数或生产保证。
 
 SHA-256实现依据[FIPS 180-4](https://csrc.nist.gov/pubs/fips/180-4/upd1/final)，有标准向量和Python hashlib文件摘要交叉检查；不声称FIPS认证。已有工程基础继续使用MoonBit标准库与moonbitlang/x，未移植其他外部排序项目的实现。
+
+最终本机观测与全部原始字段见[外部引擎基准](../benchmarks/external-README.md)：百万条账目一致，峰值RSS约631.19 MiB与5.83 MiB，对应耗时约5.21秒与85.99秒。单次合成观测，不是生产保证。

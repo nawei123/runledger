@@ -1,0 +1,67 @@
+{
+  "source_commit": "b6e46b4b303663fee74163e3a3d0b87ecb119440",
+  "working_tree_dirty": false,
+  "system": "Darwin",
+  "machine": "arm64",
+  "profile": "native-debug",
+  "method": "One run per mode/size; POSIX wait4 per-child peak RSS and end-to-end wall time. No medians or production guarantee.",
+  "binary_sha256": {
+    "in_memory": "758a661443c17c12dd1966d0d2b44646d17e22462317febb2e0f811148eade72",
+    "external": "1f99c01b74edeb547a488074190f8405798c2f68039f83cb9bcac57ae252e88d"
+  },
+  "benchmark_binaries_are_immutable_copies": true,
+  "synthetic_data": true,
+  "real_model_calls": false,
+  "manifest_used": false,
+  "limitations": "Batch bytes is a working-set target, not a hard RSS cap; manifest memory and output disk are separate. External audit trades I/O and time for lower RAM. No OOM, streaming provider, or real-user claim.",
+  "results": [
+    {
+      "calls": 100000,
+      "input_bytes": 15466670,
+      "input_sha256": "dbf627986f01f59c957eaadd26e25208c201c37dc7ccc2d925e1db50a7e05565",
+      "in_memory": {
+        "wall_seconds": 1.114660125,
+        "peak_rss_bytes": 76496896,
+        "exit_code": 0
+      },
+      "external": {
+        "wall_seconds": 6.250067208,
+        "peak_rss_bytes": 6160384,
+        "exit_code": 0
+      },
+      "totals": {
+        "calls": 100000,
+        "input_tokens": "10200000",
+        "output_tokens": "2000000",
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "totals_equal": true,
+      "workspace_bytes": 35313741
+    },
+    {
+      "calls": 1000000,
+      "input_bytes": 156666670,
+      "input_sha256": "58deca0e56907c0cd73a2f827386894b676ec878b267a3737c10247e7c6579ff",
+      "in_memory": {
+        "wall_seconds": 5.2104152500000005,
+        "peak_rss_bytes": 661848064,
+        "exit_code": 0
+      },
+      "external": {
+        "wall_seconds": 85.99077495799999,
+        "peak_rss_bytes": 6111232,
+        "exit_code": 0
+      },
+      "totals": {
+        "calls": 1000000,
+        "input_tokens": "102000000",
+        "output_tokens": "20000000",
+        "unknown_usage_calls": 0,
+        "failed_calls": 0
+      },
+      "totals_equal": true,
+      "workspace_bytes": 359119515
+    }
+  ]
+}

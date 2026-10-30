@@ -104,3 +104,5 @@ SDK配置要求显式模型调用类型、任务标识和OK/ERROR状态；UNSET�
 同类方案、借鉴关系、改进内容及基准方法见[市场研究](docs/market-research.md)。本项目主张MoonBit生态内的工程集成与性能改进，不主张首创Token统计或trace合同。
 
 [技术补充与九个可重放实例](docs/review-supplement.md)提供具体输入、诊断、实现位置和证据边界。新增实例用于解释已有0.2.0行为，不代表新增核心能力或赛事认可。
+
+0.3.0同构建百万条合成调用观测：内存模式峰值约631 MiB，外部模式约5.8 MiB；耗时约5.2秒与86秒，账目一致。[原始结果、复现和限制](benchmarks/external-README.md)。增量库接口UsageFold、CoverageIndex供已验证且完成身份对账的记录使用；外部引擎入口位于nawei123/runledger/external，原生I/O适配不进入可移植核心。
